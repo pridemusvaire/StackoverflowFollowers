@@ -59,4 +59,19 @@ describe('Test user item', () => {
       expect(followers).toEqual([]);
     });
   });
+
+  test('pressing on Block blocks the user', () => {
+    const {getByTestId, getByText} = render(
+      <StackoverFlowUserListItem user={userMock} />,
+    );
+
+    fireEvent.press(getByTestId('toggleExpandUserItem'), {});
+    renderHook(() => {
+      waitFor(() => fireEvent.press(getByText('Block'), 123));
+      const followers = useUserStore(state => state.followingUsers);
+      const blockedUsers = useUserStore(state => state.blockedUsers);
+      expect(followers).toEqual([]);
+      expect(blockedUsers).toEqual([123]);
+    });
+  });
 });
